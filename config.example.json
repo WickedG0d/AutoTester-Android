@@ -1,0 +1,18 @@
+{
+    "MinDelay": 30,
+    "MaxDelay": 60,
+    "Schedule": "22:00",
+    "Randomize": true,
+    "SimulateGestures": true,
+    "ForceStopAfter": true,
+    "AutoWakeAndUnlock": true,
+    "AutoLockOnFinish": true,
+    "DevicePin": "",
+    "DesktopNotifications": true,
+    "LastDevice": "",
+    "SelectedApps": [
+        "com.example.app1",
+        "com.example.app2"
+    ],
+    "AppCache": {}
+}
