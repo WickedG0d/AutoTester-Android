@@ -1,0 +1,14 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Ensure shell scripts always retain LF (prevents "\r: command not found" on Linux)
+*.sh text eol=lf
+
+# Ensure CI workflows and markdown use standard LF
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+
+# PowerShell scripts on Windows
+*.ps1 text eol=crlf
