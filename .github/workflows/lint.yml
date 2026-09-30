@@ -20,11 +20,12 @@ jobs:
           $errors = $null
           $tokens = $null
           [System.Management.Automation.Language.Parser]::ParseFile("BetaTester.ps1", [ref]$tokens, [ref]$errors)
+          [System.Management.Automation.Language.Parser]::ParseFile("install-deps.ps1", [ref]$tokens, [ref]$errors)
           if ($errors.Count -gt 0) {
             $errors | ForEach-Object { Write-Error $_.Message }
             exit 1
           }
-          Write-Host "✅ BetaTester.ps1 syntax validated successfully!"
+          Write-Host "✅ All PowerShell scripts validated successfully!"
 
   linux-bash:
     name: Linux Bash Validation
@@ -36,7 +37,8 @@ jobs:
       - name: Validate Bash Script Syntax
         run: |
           bash -n betatester.sh
-          echo "✅ betatester.sh syntax validated successfully!"
+          bash -n install-deps.sh
+          echo "✅ All Bash scripts validated successfully!"
 
       - name: Install ShellCheck & jq
         run: sudo apt-get update && sudo apt-get install -y shellcheck jq
@@ -46,7 +48,8 @@ jobs:
           jq . config.example.json >/dev/null
           echo "✅ config.example.json is valid JSON!"
 
-      - name: Run ShellCheck on betatester.sh
+      - name: Run ShellCheck on Bash scripts
         run: |
           shellcheck -e SC2086,SC2181,SC2206,SC2034,SC2155 betatester.sh
+          shellcheck -e SC2086 install-deps.sh
           echo "✅ ShellCheck passed cleanly!"
