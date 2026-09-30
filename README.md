@@ -56,7 +56,7 @@ AutoTester-Android solves this by emulating **genuine human engagement** across 
 
 ### 1. Clone the Repository
 ```powershell
-git clone https://github.com/<your-username>/AutoTester-Android.git
+git clone https://github.com/WickedG0d/AutoTester-Android.git
 cd AutoTester-Android
 ```
 
