@@ -1,4 +1,4 @@
-name: PowerShell Syntax Check
+name: Cross-Platform Syntax & Lint Check
 
 on:
   push:
@@ -7,7 +7,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  syntax-check:
+  windows-powershell:
+    name: Windows PowerShell Validation
     runs-on: windows-latest
     steps:
       - name: Check out repository code
@@ -24,3 +25,28 @@ jobs:
             exit 1
           }
           Write-Host "✅ BetaTester.ps1 syntax validated successfully!"
+
+  linux-bash:
+    name: Linux Bash Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Validate Bash Script Syntax
+        run: |
+          bash -n betatester.sh
+          echo "✅ betatester.sh syntax validated successfully!"
+
+      - name: Install ShellCheck & jq
+        run: sudo apt-get update && sudo apt-get install -y shellcheck jq
+
+      - name: Validate JSON schema with jq
+        run: |
+          jq . config.example.json >/dev/null
+          echo "✅ config.example.json is valid JSON!"
+
+      - name: Run ShellCheck on betatester.sh
+        run: |
+          shellcheck -e SC2086,SC2181,SC2206,SC2034,SC2155 betatester.sh
+          echo "✅ ShellCheck passed cleanly!"
