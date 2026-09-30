@@ -1,5 +1,5 @@
 # ==============================================================================
-#                      PLAYKEEPER / ANDROID BETA TEST AUTOMATOR
+#                  AUTOTESTER-ANDROID / BETA TEST AUTOMATOR
 #       Automated Continuous Testing for Google Play 14-Day / 20-Tester Requirements
 #                         ADB Wireless + Windows Task Scheduler
 # ==============================================================================
@@ -300,13 +300,17 @@ function Wake-And-Unlock-Device {
     adb -s $Device shell input swipe $metrics.ScrollMidX $metrics.ScrollBtmY $metrics.ScrollMidX $metrics.ScrollTopY 250 2>$null | Out-Null
     Start-Sleep -Milliseconds 400
 
-    # If PIN is configured, input it
+    # If PIN or alphanumeric Password is configured, input it
     if ($Pin) {
-        Write-Log "Inputting device PIN for unlock..." -Level "INFO"
-        adb -s $Device shell input text $Pin 2>$null | Out-Null
-        Start-Sleep -Milliseconds 200
+        Write-Log "Inputting device PIN/Password for unlock..." -Level "INFO"
+        # In adb shell input text, space is represented as %s
+        $escaped = $Pin -replace ' ', '%s'
+        # Escape characters that have special shell significance: \ " ' $ & ` ; ( ) < > |
+        $escaped = [regex]::Replace($escaped, '([\\\"''\$&`;()<>|])', '\$1')
+        adb -s $Device shell input text "$escaped" 2>$null | Out-Null
+        Start-Sleep -Milliseconds 300
         adb -s $Device shell input keyevent 66 2>$null | Out-Null # KEYCODE_ENTER
-        Start-Sleep -Milliseconds 500
+        Start-Sleep -Milliseconds 600
     }
 }
 
@@ -803,7 +807,7 @@ function Configure-Advanced-Settings {
         Write-Host "[2] Force-Stop App After Testing        : $(if ($Config.ForceStopAfter) { 'ENABLED' } else { 'DISABLED' })"
         Write-Host "[3] Auto-Wake and Unlock Screen         : $(if ($Config.AutoWakeAndUnlock) { 'ENABLED' } else { 'DISABLED' })"
         Write-Host "[4] Auto-Lock Screen When Finished      : $(if ($Config.AutoLockOnFinish) { 'ENABLED' } else { 'DISABLED' })"
-        Write-Host "[5] Device Unlock PIN                   : $(if ($Config.DevicePin) { 'SET (****)' } else { 'NOT SET (Swipe/None)' })"
+        Write-Host "[5] Device Unlock PIN / Password   : $(if ($Config.DevicePin) { 'SET (****)' } else { 'NOT SET (Swipe/None)' })"
         Write-Host "[6] Desktop Toast Notifications         : $(if ($Config.DesktopNotifications) { 'ENABLED' } else { 'DISABLED' })"
         Write-Host "[7] Back to Main Menu"
         Write-Host ""
@@ -816,7 +820,7 @@ function Configure-Advanced-Settings {
             "3" { $Config.AutoWakeAndUnlock = !$Config.AutoWakeAndUnlock }
             "4" { $Config.AutoLockOnFinish = !$Config.AutoLockOnFinish }
             "5" {
-                $pin = Read-Host "Enter phone PIN (leave blank to clear)"
+                $pin = Read-Host "Enter phone PIN or alphanumeric password (leave blank to clear)"
                 $Config.DevicePin = $pin.Trim()
             }
             "6" { $Config.DesktopNotifications = !$Config.DesktopNotifications }
@@ -855,7 +859,7 @@ function Run-Apps {
         if (!$Device) {
             Write-Log "Failed to reconnect to Android device. Aborting run." -Level "ERROR"
             if ($Config.DesktopNotifications) {
-                Send-DesktopNotification -Title "PlayKeeper Test Failed" -Message "Device disconnected and could not reconnect." -IsError
+                Send-DesktopNotification -Title "AutoTester-Android Test Failed" -Message "Device disconnected and could not reconnect." -IsError
             }
             if (!$IsAutoRun) { Pause }
             return
@@ -960,7 +964,7 @@ function Run-Apps {
     Write-Log "Run Complete: $summaryMsg" -Level "SUCCESS"
 
     if ($Config.DesktopNotifications) {
-        Send-DesktopNotification -Title "PlayKeeper Test Complete" -Message $summaryMsg
+        Send-DesktopNotification -Title "AutoTester-Android Test Complete" -Message $summaryMsg
     }
 
     # IMPORTANT: Never call Pause in -AutoRun mode (prevents scheduled task hang)
@@ -1011,7 +1015,7 @@ function Install-Scheduler {
         -TaskName $taskName `
         -Action $action `
         -Trigger $trigger `
-        -Description "Automatically runs PlayKeeper Android beta testing apps via ADB Wireless." `
+        -Description "Automatically runs AutoTester-Android Android beta testing apps via ADB Wireless." `
         -Force | Out-Null
 
     Write-Log "Scheduler task '$taskName' registered for daily execution at $($Config.Schedule)." -Level "SUCCESS"
@@ -1074,7 +1078,7 @@ function Main {
 
         Clear-Host
         Write-Host "================================================================="
-        Write-Host "       PLAYKEEPER - ANDROID BETA TEST AUTOMATOR"
+        Write-Host "   AUTOTESTER-ANDROID - BETA TEST AUTOMATOR"
         Write-Host "================================================================="
         Write-Host ""
         Write-Host "Connected Device : $Device" -ForegroundColor Green
@@ -1160,7 +1164,7 @@ if ($AutoRun -or ($args -contains "-AutoRun")) {
     if (!$Device) {
         Write-Log "Phone unavailable for scheduled run. Aborting." -Level "ERROR"
         if ($Config.DesktopNotifications) {
-            Send-DesktopNotification -Title "PlayKeeper Error" -Message "Scheduled test aborted: Phone unavailable." -IsError
+            Send-DesktopNotification -Title "AutoTester-Android Error" -Message "Scheduled test aborted: Phone unavailable." -IsError
         }
         exit 1
     }

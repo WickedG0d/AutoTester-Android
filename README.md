@@ -1,4 +1,4 @@
-# PlayKeeper 🚀
+# AutoTester-Android 🚀
 ### Automated Android Beta Testing for Google Play Console Closed Testing (14 Days / 20 Testers)
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)](https://learn.microsoft.com/powershell/)
@@ -6,13 +6,13 @@
 [![ADB](https://img.shields.io/badge/ADB-Android%20Debug%20Bridge-green.svg)](https://developer.android.com/tools/adb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**PlayKeeper** is a lightweight, zero-dependency automation engine designed for Android developers to satisfy Google Play Console's strict **20 testers opted in for 14 continuous days** closed testing requirement.
+**AutoTester-Android** is a lightweight, zero-dependency automation engine designed for Android developers to satisfy Google Play Console's strict **20 testers opted in for 14 continuous days** closed testing requirement.
 
 It automatically connects to your Android test device over **Wireless ADB** (or USB), wakes and unlocks the phone, launches your beta apps, simulates natural human interactions (scrolling, tapping, navigating), records test metrics, and cleanly locks the device upon completion—every single day via Windows Task Scheduler.
 
 ---
 
-## 🎯 Why PlayKeeper?
+## 🎯 Why AutoTester-Android?
 
 Since November 2023, Google requires personal developer accounts to run closed tests with **at least 20 testers for at least 14 days continuously** before applying for production access. 
 
@@ -21,14 +21,14 @@ Google’s automated review algorithms flag and reject production access request
 - Daily active engagement is sporadic or non-existent.
 - Testers do not interact with app views.
 
-PlayKeeper solves this by emulating **genuine human engagement** across your suite of test apps on a daily schedule without requiring you to manually open 20+ apps every day.
+AutoTester-Android solves this by emulating **genuine human engagement** across your suite of test apps on a daily schedule without requiring you to manually open 20+ apps every day.
 
 ---
 
 ## ✨ Features
 
 - **📶 Wireless ADB Auto-Discovery:** Seamlessly connects and reconnects using mDNS TLS discovery (`adb mdns services`) and previous IP/port caching.
-- **👆 Humanized Interaction Emulation:** Rather than leaving apps idle, PlayKeeper generates natural swipe-down, swipe-up, safe-viewport taps, and in-app back navigation to simulate realistic user engagement.
+- **👆 Humanized Interaction Emulation:** Rather than leaving apps idle, AutoTester-Android generates natural swipe-down, swipe-up, safe-viewport taps, and in-app back navigation to simulate realistic user engagement.
 - **🔓 Automated Wake & Unlock:** Wakes the phone screen, dismisses the keyguard/swipe lock, optionally inputs a PIN, and turns the screen back off when testing completes.
 - **⏱️ Configurable Test Durations:** Customize minimum and maximum dwell times (recommended: 30–60s) to create randomized, organic testing patterns.
 - **🧹 Memory & Thermal Management:** Optional automatic force-stopping (`am force-stop`) after each app session prevents background apps from draining battery or bogging down RAM.
@@ -56,8 +56,8 @@ PlayKeeper solves this by emulating **genuine human engagement** across your sui
 
 ### 1. Clone the Repository
 ```powershell
-git clone https://github.com/<your-username>/PlayKeeper.git
-cd PlayKeeper
+git clone https://github.com/<your-username>/AutoTester-Android.git
+cd AutoTester-Android
 ```
 
 ### 2. Connect Your Device via Wireless ADB
@@ -73,7 +73,7 @@ cd PlayKeeper
    adb connect <ip>:<port>
    ```
 
-### 3. Launch PlayKeeper
+### 3. Launch AutoTester-Android
 Run the script interactively:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\BetaTester.ps1
@@ -82,7 +82,7 @@ powershell -ExecutionPolicy Bypass -File .\BetaTester.ps1
 ### 4. Interactive Menu Overview
 ```text
 =================================================================
-       PLAYKEEPER - ANDROID BETA TEST AUTOMATOR
+   AUTOTESTER-ANDROID - BETA TEST AUTOMATOR
 =================================================================
 
 Connected Device : 192.168.1.50:39841
@@ -146,7 +146,7 @@ Configuration settings are stored in `config.json`. You can modify them through 
 | `ForceStopAfter` | `true` | Calls `am force-stop` on each app after testing to prevent memory exhaustion. |
 | `AutoWakeAndUnlock`| `true` | Wakes the screen and dismisses keyguard automatically. |
 | `AutoLockOnFinish` | `true` | Puts the screen back to sleep when all apps have finished testing. |
-| `DevicePin` | `""` | Optional lock screen PIN (digits only) if your device uses a PIN lock. |
+| `DevicePin` | `""` | Optional lock screen PIN or alphanumeric password if your device uses a lock. |
 | `DesktopNotifications` | `true` | Displays Windows toast/balloon notifications when runs start/complete. |
 | `SelectedApps` | `[]` | List of package identifiers targeted for testing. |
 
