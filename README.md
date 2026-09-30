@@ -4,6 +4,8 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)](https://learn.microsoft.com/powershell/)
 [![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)](https://microsoft.com/windows)
 [![ADB](https://img.shields.io/badge/ADB-Android%20Debug%20Bridge-green.svg)](https://developer.android.com/tools/adb)
+[![CI](https://github.com/WickedG0d/AutoTester-Android/actions/workflows/lint.yml/badge.svg)](https://github.com/WickedG0d/AutoTester-Android/actions/workflows/lint.yml)
+[![Release](https://img.shields.io/github/v/release/WickedG0d/AutoTester-Android?color=orange)](https://github.com/WickedG0d/AutoTester-Android/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **AutoTester-Android** is a lightweight, zero-dependency automation engine designed for Android developers to satisfy Google Play Console's strict **20 testers opted in for 14 continuous days** closed testing requirement.
